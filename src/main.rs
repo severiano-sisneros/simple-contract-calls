@@ -30,10 +30,12 @@ sol! {
 async fn main() -> Result<(), Box<dyn std::error::Error>>{
 
     let private_key = env::var("PRIVATE_KEY")?;
+    let drpc_key = env::var("DRPC_KEY")?;
+    let drpc_url = format!("https://lb.drpc.org/ogrpc?network=sepolia&dkey={}", drpc_key);
     let signer = PrivateKeySigner::from_bytes(&FixedBytes::from_str(&private_key)?)?;
     let wallet = EthereumWallet::new(signer);
     // Build a provider.
-    let provider = ProviderBuilder::new().with_recommended_fillers().wallet(wallet).on_builtin("https://lb.drpc.org/ogrpc?network=sepolia&dkey=AkJKcA3HxklbqnEFlctbiOrdkdV4MwsR76QohkHL9tz4").await?;
+    let provider = ProviderBuilder::new().with_recommended_fillers().wallet(wallet).on_builtin(&drpc_url).await?;
 
 
     // Otherwise, or if already deployed, a new contract instance can be created with `MyContract::new`.
