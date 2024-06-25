@@ -1,17 +1,16 @@
-use alloy_contract::SolCallBuilder;
-use alloy_network::{Ethereum, EthereumWallet};
-use alloy_primitives::{Address, address, U256, Bytes, FixedBytes};
+use alloy_network::EthereumWallet;
+use alloy_primitives::{address, Bytes, FixedBytes};
 use alloy_provider::ProviderBuilder;
 use alloy_sol_types::sol;
 use alloy_signer_local::PrivateKeySigner;
-use alloy_signer::{Signer, SignerSync};
 use serde::{Serialize, Deserialize};
 use std::str::FromStr;
 use std::env;
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct ProofFixture {
-    publicValues: Bytes,
+    public_values: Bytes,
     proof: Bytes,
 }
 
@@ -46,7 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>{
     let proof_string= std::fs::read_to_string("./src/fixture.json")?;
     let proof_fixture: ProofFixture = serde_json::from_str(&proof_string)?;
     let proof = proof_fixture.proof; 
-    let public_values = proof_fixture.publicValues; 
+    let public_values = proof_fixture.public_values; 
     let call_builder = contract.verifyAndUpdate(proof, public_values);
 
     // Send the call. Note that this is not broadcasted as a transaction.
